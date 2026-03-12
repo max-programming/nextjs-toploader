@@ -228,7 +228,16 @@ const NextTopLoader = ({
      * @returns element {Element}
      */
     function findClosestAnchor(element: HTMLElement | null): HTMLAnchorElement | null {
-      while (element && element.tagName.toLowerCase() !== 'a') {
+      while (element) {
+        const tagName = element.tagName.toLowerCase();
+        if (tagName === 'a') break;
+        // Stop walking up if we hit an interactive element
+        if (
+          ['button', 'input', 'select', 'textarea'].includes(tagName) ||
+          element.getAttribute('role') === 'button'
+        ) {
+          return null;
+        }
         element = element.parentElement;
       }
       return element as HTMLAnchorElement;
